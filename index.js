@@ -23,7 +23,7 @@ var banned = [];
 client.on('messageCreate', (message) => {
     //TODO: Make it so that the bot wont ban its own commands
 
-    //Split message into array of strings
+    //Split message into array of words stored as strings
     var words = message.content.split(" ");
     
     //Iterate through message, if banned word is found, delete message
