@@ -1,6 +1,6 @@
 //Prerequisites
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
+const { token, guildID, channelID } = require('./config.json');
 
 const client = new Client({
     intents: [
@@ -17,12 +17,13 @@ var cron = require("cron");
 
 //Create list of banned words
 var banned = [];
+var channel;
 
 //Reset list every 24 hours
 //idk if this actually works
 let reset = new cron.CronJob('0 0 * * *', () => {
     banned = [];
-    console.log("List successfully reset");
+    channel.send("Reset list");
 });
 
 //TODO: Add a configuration command that will allow the user to change percentage, print off the list of banned words, or clear the list of banned words.
@@ -30,6 +31,10 @@ let reset = new cron.CronJob('0 0 * * *', () => {
 //Get message
 client.on('messageCreate', (message) => {
 
+    //Dont delete bot messages
+    if(message.author.bot){
+        return;
+    }
 
     //Split message into array of words stored as strings
     var words = message.content.split(" ");
@@ -48,7 +53,7 @@ client.on('messageCreate', (message) => {
     }
 
     //5% chance that word gets banned
-    if((Math.floor(Math.random() * 20)) >= 10){
+    if((Math.floor(Math.random() * 20)) == 1){
 
         //Choose word to ban
         var tmpWord = words[Math.floor(Math.random() * words.length)];
@@ -56,13 +61,10 @@ client.on('messageCreate', (message) => {
         //Make sure that the word is not already in the list, then add the word to list of banned words
         if(banned.includes(tmpWord) == false){
             banned.push(tmpWord);
-        }
 
-        //Print out banned list
-        for (var i=0; i< banned.length; i++){
-            process.stdout.write(banned[i] + ", ");
+            //Report banned word to server
+            channel.send("\"" + tmpWord + "\" is now banned");
         }
-        process.stdout.write("\n")
     }
 });
 
@@ -70,6 +72,8 @@ client.on(Events.ClientReady, async () => {
 	
     //login notif
     console.log(`Logged in as ${client.user.tag}!`);
+    channel = client.guilds.cache.get(guildID).channels.cache.get(channelID);
+    channel.send("Bot Online");
 
     //Start reset thing
     reset.start();
