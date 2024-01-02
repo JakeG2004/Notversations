@@ -52,8 +52,8 @@ client.on('messageCreate', (message) => {
         }
     }
 
-    //5% chance that word gets banned
-    if((Math.floor(Math.random() * 20)) == 1){
+    //0.1% chance that word gets banned
+    if((Math.floor(Math.random() * 1000)) == 1){
 
         //Choose word to ban
         var tmpWord = words[Math.floor(Math.random() * words.length)];
