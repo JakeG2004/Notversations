@@ -1,3 +1,4 @@
+
 //Prerequisites
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const { token, guildID, channelID } = require('./config.json');
@@ -20,7 +21,6 @@ var banned = [];
 var channel;
 
 //Reset list every 24 hours
-//idk if this actually works
 let reset = new cron.CronJob('0 0 * * *', () => {
     banned = [];
     channel.send("Reset list");
@@ -40,7 +40,7 @@ client.on('messageCreate', (message) => {
     var words = message.content.split(" ");
     
     //Iterate through message, if banned word is found, delete message
-    for(var i = 0; i<words.length; i++){
+    for(var i = 0; i < words.length; i++){
         if(banned.includes(words[i])){
 
             //message.reply("Nuh uh");
@@ -53,7 +53,7 @@ client.on('messageCreate', (message) => {
     }
 
     //0.1% chance that word gets banned
-    if((Math.floor(Math.random() * 1000)) == 1){
+    if((Math.floor(Math.random() * 200)) == 1){
 
         //Choose word to ban
         var tmpWord = words[Math.floor(Math.random() * words.length)];
